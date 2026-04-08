@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JJK: Beyond Kaisen — Light Novel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&family=Oswald:wght@400;600;700&family=Source+Code+Pro:wght@400;600&family=Crimson+Pro:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:#08080c; }
+body { background:#08080c !important; color:#d4d4d8; font-family:'Bitter',Georgia,serif; line-height:1.6; min-height:100vh; }
+
+/* HEADER */
+.site-header { border-bottom:1px solid #1e1e2a; padding:0.8rem 1rem; text-align:center; position:sticky; top:0; z-index:100; background:rgba(8,8,12,0.95); backdrop-filter:blur(12px); }
+.site-header h1 { font-family:‘Oswald’,sans-serif; font-weight:700; font-size:1.2rem; letter-spacing:0.12em; text-transform:uppercase; color:#f0f0f2; display:inline; }
+.site-header h1 span { color:#e53935; }
+
+/* NAV TABS */
+.nav-tabs { display:flex; border-bottom:1px solid #1e1e2a; background:#0a0a10; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.nav-tabs::-webkit-scrollbar { height:0; }
+.nav-tab { font-family:‘Source Code Pro’,monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.7rem 1rem; color:#6b6b7b; cursor:pointer; transition:all 0.2s; white-space:nowrap; border-bottom:2px solid transparent; flex-shrink:0; background:none; border-top:none; border-left:none; border-right:none; }
+.nav-tab:hover { color:#d4d4d8; }
+.nav-tab.active { color:#e53935; border-bottom-color:#e53935; }
+
+/* PAGES */
+.page { display:none; }
+.page.active { display:block; }
+
+/* HERO */
+.hero { padding:2.5rem 1.5rem; text-align:center; border-bottom:1px solid #1e1e2a; background:linear-gradient(180deg, rgba(229,57,53,0.03) 0%, rgba(8,8,12,0) 100%); }
+.hero .label { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:#e53935; margin-bottom:0.6rem; }
+.hero h2 { font-family:‘Crimson Pro’,serif; font-size:1.4rem; font-weight:700; color:#f0f0f2; line-height:1.3; max-width:500px; margin:0 auto; }
+.hero .hero-sub { font-family:‘Crimson Pro’,serif; font-size:0.9rem; color:#6b6b7b; margin-top:0.6rem; font-style:italic; }
+.hero .credit { font-family:‘Source Code Pro’,monospace; font-size:0.55rem; color:#3e3e4e; letter-spacing:0.1em; text-transform:uppercase; margin-top:1.2rem; }
+
+/* STATS */
+.stats-bar { display:flex; gap:1px; background:#1e1e2a; border-bottom:1px solid #1e1e2a; }
+.stat-block { flex:1; padding:0.5rem 0.4rem; text-align:center; background:#0e0e14; }
+.stat-block .val { font-family:‘Oswald’,sans-serif; font-size:1rem; font-weight:700; color:#f0f0f2; }
+.stat-block .label { font-family:‘Source Code Pro’,monospace; font-size:0.5rem; color:#6b6b7b; letter-spacing:0.08em; text-transform:uppercase; }
+
+/* PROGRESS BANNER */
+.progress-banner { max-width:800px; margin:0 auto; padding:0.8rem 1rem; border-bottom:1px solid #1e1e2a; background:#0e0e14; display:flex; align-items:center; gap:0.8rem; }
+.progress-banner .prog-label { font-family:‘Source Code Pro’,monospace; font-size:0.55rem; color:#6b6b7b; letter-spacing:0.08em; text-transform:uppercase; flex-shrink:0; }
+.progress-bar-wrap { flex:1; height:4px; background:#1e1e2a; border-radius:2px; overflow:hidden; }
+.progress-bar-fill { height:100%; background:#e53935; border-radius:2px; transition:width 0.3s; }
+.progress-text { font-family:‘Source Code Pro’,monospace; font-size:0.55rem; color:#e53935; flex-shrink:0; }
+
+/* CHAPTER LIST */
+.chapter-list { max-width:800px; margin:0 auto; }
+.chapter-entry { padding:1rem; border-bottom:1px solid rgba(30,30,42,0.5); cursor:pointer; transition:background 0.2s; }
+.chapter-entry:hover { background:#14141e; }
+.chapter-entry.expanded { background:#0e0e14; }
+.ch-top { display:flex; align-items:flex-start; gap:0.75rem; }
+.ch-number { font-family:‘Oswald’,sans-serif; font-weight:700; font-size:0.85rem; color:#6b6b7b; min-width:42px; flex-shrink:0; padding-top:2px; }
+.ch-info { flex:1; min-width:0; }
+.ch-title { font-family:‘Crimson Pro’,serif; font-size:1.05rem; font-weight:700; color:#f0f0f2; line-height:1.3; }
+.ch-meta { display:flex; gap:0.8rem; align-items:center; margin-top:0.2rem; flex-wrap:wrap; }
+.ch-arc { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; letter-spacing:0.08em; text-transform:uppercase; display:inline-block; padding:0.1rem 0.4rem; border-radius:1px; color:#e53935; background:rgba(229,57,53,0.1); }
+.ch-wordcount { font-family:‘Source Code Pro’,monospace; font-size:0.55rem; color:#3e3e4e; }
+.ch-hype { display:flex; gap:2px; margin-top:0.3rem; }
+.hype-bar { width:14px; height:4px; background:#2a2a3a; border-radius:1px; }
+.hype-bar.filled { background:#e53935; }
+.hype-bar.gold { background:#d4a843; }
+.ch-detail { display:none; margin-top:0.8rem; padding-top:0.8rem; border-top:1px solid #1e1e2a; }
+.chapter-entry.expanded .ch-detail { display:block; }
+.ch-summary { font-family:‘Crimson Pro’,serif; font-size:0.95rem; color:#d4d4d8; line-height:1.7; margin-bottom:0.8rem; font-style:italic; }
+.ch-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.6rem; }
+.ch-tag { font-family:‘Source Code Pro’,monospace; font-size:0.58rem; letter-spacing:0.06em; padding:0.2rem 0.5rem; border:1px solid #2a2a3a; color:#6b6b7b; text-transform:uppercase; }
+.ch-tag.lore { border-color:#1e3a5f; color:#42a5f5; }
+.ch-tag.fight { border-color:#4a1a5e; color:#ab47bc; }
+.ch-tag.mystery { border-color:#3a3a1e; color:#c8b84d; }
+.ch-tag.emotional { border-color:#1a5e2e; color:#66bb6a; }
+.ch-tag.cliffhanger { border-color:#5e1a4a; color:#e879a8; }
+.new-badge { font-family:‘Source Code Pro’,monospace; font-size:0.5rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.15rem 0.4rem; background:#e53935; color:#fff; margin-left:0.5rem; vertical-align:middle; }
+.read-btn { display:inline-block; margin-top:0.6rem; font-family:‘Source Code Pro’,monospace; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; padding:0.4rem 1rem; border:1px solid #e53935; color:#e53935; background:rgba(229,57,53,0.05); cursor:pointer; transition:all 0.2s; }
+.read-btn:hover { background:rgba(229,57,53,0.15); color:#f0f0f2; }
+
+/* REACTIONS */
+.reactions { display:flex; gap:0.5rem; margin-top:0.8rem; padding-top:0.6rem; border-top:1px solid #1e1e2a; flex-wrap:wrap; }
+.react-btn { font-size:0.85rem; padding:0.25rem 0.5rem; border:1px solid #2a2a3a; background:transparent; border-radius:12px; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:0.3rem; }
+.react-btn .react-count { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; color:#6b6b7b; }
+.react-btn:hover { border-color:#e53935; background:rgba(229,57,53,0.08); }
+.react-btn.reacted { border-color:#e53935; background:rgba(229,57,53,0.15); }
+.react-btn.reacted .react-count { color:#e53935; }
+
+/* MUSIC PLAYER */
+.music-player { max-width:800px; margin:0 auto; padding:0.7rem 1rem; border-bottom:1px solid #1e1e2a; background:#0a0a10; display:flex; align-items:center; gap:0.8rem; }
+.music-icon { font-size:1rem; flex-shrink:0; cursor:pointer; }
+.music-info { flex:1; min-width:0; }
+.music-title { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; color:#d4d4d8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.music-artist { font-family:‘Source Code Pro’,monospace; font-size:0.5rem; color:#3e3e4e; }
+.music-controls { display:flex; gap:0.5rem; align-items:center; flex-shrink:0; }
+.music-btn { background:none; border:1px solid #2a2a3a; color:#6b6b7b; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.7rem; transition:all 0.2s; }
+.music-btn:hover { border-color:#e53935; color:#f0f0f2; }
+.music-btn.playing { border-color:#e53935; color:#e53935; }
+
+/* CHARACTER PROFILES PAGE */
+.profiles-grid { max-width:800px; margin:0 auto; padding:1rem; display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:0.8rem; }
+.profile-card { background:#0e0e14; border:1px solid #1e1e2a; padding:1rem; cursor:pointer; transition:all 0.2s; text-align:center; }
+.profile-card:hover { border-color:#e53935; background:#14141e; }
+.profile-rank { font-family:‘Source Code Pro’,monospace; font-size:0.55rem; color:#e53935; letter-spacing:0.1em; }
+.profile-name { font-family:‘Oswald’,sans-serif; font-size:0.9rem; font-weight:600; color:#f0f0f2; margin-top:0.3rem; text-transform:uppercase; letter-spacing:0.05em; }
+.profile-epithet { font-family:‘Crimson Pro’,serif; font-size:0.75rem; color:#6b6b7b; font-style:italic; margin-top:0.2rem; }
+.profile-status { font-family:‘Source Code Pro’,monospace; font-size:0.5rem; color:#3e3e4e; margin-top:0.4rem; letter-spacing:0.08em; text-transform:uppercase; }
+.profile-status.active { color:#66bb6a; }
+.profile-status.unknown { color:#d4a843; }
+
+/* PROFILE DETAIL OVERLAY */
+.profile-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; width:100%; height:100%; z-index:99999; background:#08080c; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+.profile-overlay.open { display:block; }
+.profile-detail { max-width:640px; margin:0 auto; padding:2rem 1.2rem 4rem; }
+.profile-detail .pd-rank { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; color:#e53935; letter-spacing:0.15em; }
+.profile-detail .pd-name { font-family:‘Oswald’,sans-serif; font-size:1.8rem; font-weight:700; color:#f0f0f2; text-transform:uppercase; letter-spacing:0.05em; }
+.profile-detail .pd-epithet { font-family:‘Crimson Pro’,serif; font-size:1.1rem; color:#6b6b7b; font-style:italic; margin-top:0.2rem; }
+.profile-detail .pd-section { margin-top:1.5rem; }
+.profile-detail .pd-section-title { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; color:#e53935; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.5rem; }
+.profile-detail .pd-text { font-family:‘Crimson Pro’,serif; font-size:0.95rem; color:#c8c8ce; line-height:1.7; }
+.profile-detail .pd-stats { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.5rem; }
+.profile-detail .pd-stat { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; padding:0.25rem 0.6rem; border:1px solid #2a2a3a; color:#6b6b7b; }
+
+/* TEAM PAGE */
+.team-page { max-width:800px; margin:0 auto; padding:2rem 1.5rem; }
+.team-page h3 { font-family:‘Oswald’,sans-serif; font-size:1.2rem; color:#f0f0f2; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem; }
+.team-page .team-sub { font-family:‘Crimson Pro’,serif; font-size:0.95rem; color:#6b6b7b; font-style:italic; margin-bottom:2rem; }
+.team-grid { display:grid; grid-template-columns:1fr; gap:1rem; }
+.team-member { background:#0e0e14; border:1px solid #1e1e2a; padding:1.2rem; }
+.team-member .tm-name { font-family:‘Oswald’,sans-serif; font-size:1rem; color:#f0f0f2; text-transform:uppercase; letter-spacing:0.08em; }
+.team-member .tm-handle { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; color:#e53935; margin-top:0.15rem; }
+.team-member .tm-role { font-family:‘Source Code Pro’,monospace; font-size:0.55rem; color:#6b6b7b; letter-spacing:0.08em; text-transform:uppercase; margin-top:0.3rem; }
+.team-member .tm-desc { font-family:‘Crimson Pro’,serif; font-size:0.9rem; color:#6b6b7b; margin-top:0.5rem; line-height:1.5; }
+
+/* READER */
+.reader-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; width:100%; height:100%; z-index:99999; background:#08080c; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+.reader-overlay.open { display:block; }
+body.reader-open { overflow:hidden !important; position:fixed; width:100%; }
+.reader-header { position:sticky; top:0; z-index:100000; background:rgba(8,8,12,0.99); backdrop-filter:blur(12px); border-bottom:1px solid #1e1e2a; padding:0.8rem 1rem; display:flex; align-items:center; gap:0.8rem; }
+.reader-back { font-family:‘Source Code Pro’,monospace; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:#6b6b7b; background:none; border:1px solid #2a2a3a; padding:0.25rem 0.6rem; cursor:pointer; transition:all 0.2s; flex-shrink:0; }
+.reader-back:hover { color:#f0f0f2; border-color:#e53935; }
+.reader-ch-num { font-family:‘Source Code Pro’,monospace; font-size:0.55rem; color:#6b6b7b; letter-spacing:0.1em; }
+.reader-ch-title { font-family:‘Crimson Pro’,serif; font-size:0.95rem; font-weight:700; color:#f0f0f2; }
+.reader-body { max-width:640px; margin:0 auto; padding:2rem 1.2rem 4rem; }
+.reader-body p { font-family:‘Lora’,‘Crimson Pro’,Georgia,serif; font-size:1rem; line-height:1.85; color:#c8c8ce; margin-bottom:1.2rem; }
+.reader-body .section-title { font-family:‘Oswald’,sans-serif; font-size:1.1rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#e53935; margin-top:2.5rem; margin-bottom:1rem; }
+.reader-body .dialogue { font-style:normal; color:#f0f0f2; }
+.reader-body .chapter-end { text-align:center; margin-top:3rem; padding-top:2rem; border-top:1px solid #1e1e2a; }
+.reader-body .chapter-end .end-label { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:#3e3e4e; }
+.reader-body .chapter-end .next-ch { font-family:‘Crimson Pro’,serif; font-size:0.95rem; color:#6b6b7b; margin-top:0.5rem; font-style:italic; }
+.reader-nav { display:flex; justify-content:space-between; max-width:640px; margin:0 auto; padding:0 1.2rem 3rem; }
+.reader-nav button { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.4rem 0.8rem; border:1px solid #2a2a3a; background:transparent; color:#6b6b7b; cursor:pointer; transition:all 0.2s; }
+.reader-nav button:hover { border-color:#e53935; color:#f0f0f2; }
+.reader-nav button:disabled { opacity:0.3; cursor:default; }
+
+.next-chapter-banner { max-width:800px; margin:0 auto; padding:1.5rem 1rem; text-align:center; border-top:1px solid #8b1a18; border-bottom:1px solid #1e1e2a; background:rgba(229,57,53,0.03); }
+.next-chapter-banner .next-label { font-family:‘Source Code Pro’,monospace; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:#e53935; margin-bottom:0.3rem; }
+.next-chapter-banner .next-title { font-family:‘Crimson Pro’,serif; font-size:1.2rem; font-weight:700; color:#f0f0f2; }
+.next-chapter-banner .next-date { font-family:‘Source Code Pro’,monospace; font-size:0.6rem; color:#6b6b7b; margin-top:0.3rem; letter-spacing:0.1em; }
+
+.site-footer { text-align:center; padding:2rem 1rem; border-top:1px solid #1e1e2a; font-family:‘Source Code Pro’,monospace; font-size:0.6rem; color:#3e3e4e; letter-spacing:0.1em; text-transform:uppercase; }
+
+@media(max-width:500px) { .ch-number { min-width:36px; font-size:0.75rem; } .ch-title { font-size:0.95rem; } .reader-body p { font-size:0.95rem; } .hero h2 { font-size:1.3rem; } .profiles-grid { grid-template-columns:repeat(2, 1fr); gap:0.6rem; } .profile-name { font-size:0.8rem; } }
+</style>
+
+</head>
+<body>
+
+<header class="site-header">
+  <h1>JJK: <span>Beyond Kaisen</span></h1>
+</header>
+
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showPage('chapters')">Chapters</button>
+  <button class="nav-tab" onclick="showPage('characters')">Characters</button>
+  <button class="nav-tab" onclick="showPage('team')">Team</button>
+</div>
+
+<!-- MUSIC PLAYER -->
+
+<div class="music-player" style="flex-direction:column;gap:0.5rem;padding:0.5rem 1rem;">
+  <div style="display:flex;align-items:center;gap:0.6rem;width:100%;">
+    <div style="font-size:0.9rem;flex-shrink:0;">&#9835;</div>
+    <div style="flex:1;font-family:'Source Code Pro',monospace;font-size:0.6rem;color:#6b6b7b;">READING SOUNDTRACK</div>
+    <button class="music-btn" id="togglePlayerBtn" onclick="toggleSpotifyPlayer()" style="font-size:0.55rem;width:auto;padding:0 0.5rem;height:24px;">Show</button>
+  </div>
+  <div id="spotifyContainer" style="display:none;width:100%;">
+    <div id="embedWrap">
+      <iframe id="musicEmbed" style="border-radius:4px;width:100%;height:80px;border:none;" src="https://open.spotify.com/embed/track/3AxHavMjGMKQB5sMKGNB8P?utm_source=generator&theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+    <div style="margin-top:0.6rem;">
+      <div style="font-family:'Source Code Pro',monospace;font-size:0.5rem;color:#6b6b7b;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.3rem;">Single Song</div>
+      <div style="display:flex;gap:0.4rem;align-items:center;">
+        <input type="text" id="songInput" placeholder="Spotify or YouTube song link" style="flex:1;background:#0e0e14;border:1px solid #2a2a3a;color:#d4d4d8;font-family:'Source Code Pro',monospace;font-size:0.6rem;padding:0.35rem 0.5rem;outline:none;border-radius:2px;">
+        <button onclick="loadSong()" style="font-family:'Source Code Pro',monospace;font-size:0.55rem;padding:0.35rem 0.6rem;background:none;border:1px solid #e53935;color:#e53935;cursor:pointer;border-radius:2px;white-space:nowrap;">Load</button>
+      </div>
+    </div>
+    <div style="margin-top:0.5rem;">
+      <div style="font-family:'Source Code Pro',monospace;font-size:0.5rem;color:#6b6b7b;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.3rem;">Playlist / Album</div>
+      <div style="display:flex;gap:0.4rem;align-items:center;">
+        <input type="text" id="playlistInput" placeholder="Spotify or YouTube playlist link" style="flex:1;background:#0e0e14;border:1px solid #2a2a3a;color:#d4d4d8;font-family:'Source Code Pro',monospace;font-size:0.6rem;padding:0.35rem 0.5rem;outline:none;border-radius:2px;">
+        <button onclick="loadPlaylist()" style="font-family:'Source Code Pro',monospace;font-size:0.55rem;padding:0.35rem 0.6rem;background:none;border:1px solid #e53935;color:#e53935;cursor:pointer;border-radius:2px;white-space:nowrap;">Load</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CHAPTERS PAGE ========== -->
+
+<div class="page active" id="page-chapters">
+
+<div class="hero">
+  <div class="label">Now Reading</div>
+  <h2>A retelling of Jujutsu Kaisen where everything hits harder, everyone is stronger, and the story goes further than the manga ever did.</h2>
+  <div class="hero-sub">New chapters every Friday.</div>
+  <div class="credit">Written by @kai_09088 and team</div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-block"><div class="val">2</div><div class="label">Chapters</div></div>
+  <div class="stat-block"><div class="val">2</div><div class="label">Available</div></div>
+  <div class="stat-block"><div class="val">0</div><div class="label">Deaths</div></div>
+  <div class="stat-block"><div class="val">1</div><div class="label">Fights</div></div>
+</div>
+
+<!-- READING PROGRESS -->
+
+<div class="progress-banner">
+  <div class="prog-label">Progress</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="progress-text" id="progressText">0/2</div>
+</div>
+
+<div class="chapter-list" id="chapterList"></div>
+
+<div class="next-chapter-banner">
+  <div class="next-label">Next Chapter</div>
+  <div class="next-title">Ch. 3 — Coming Soon</div>
+  <div class="next-date">Drops Friday</div>
+</div>
+
+</div>
+
+<!-- ========== CHARACTERS PAGE ========== -->
+
+<div class="page" id="page-characters">
+<div class="profiles-grid" id="profilesGrid"></div>
+</div>
+
+<!-- ========== TEAM PAGE ========== -->
+
+<div class="page" id="page-team">
+<div class="team-page">
+  <h3>The Team</h3>
+  <div class="team-sub">The people behind JJK: Beyond Kaisen.</div>
+  <div class="team-grid">
+    <div class="team-member">
+      <div class="tm-name">Kai</div>
+      <div class="tm-handle">@kai_09088</div>
+      <div class="tm-role">Creator / Lead Writer</div>
+      <div class="tm-desc">The mind behind the entire Beyond Kaisen universe. Builds the world, writes the arcs, designs the power system. The reason any of this exists.</div>
+    </div>
+    <div class="team-member">
+      <div class="tm-name">Danny</div>
+      <div class="tm-handle">@whoisbaru</div>
+      <div class="tm-role">Web Developer / Writer</div>
+      <div class="tm-desc">Built the site from scratch. Writes chapters, contributes to worldbuilding, and handles all the technical side. The reason you can read any of this.</div>
+    </div>
+    <div class="team-member">
+      <div class="tm-name">Big Goose</div>
+      <div class="tm-handle">@BigGoose</div>
+      <div class="tm-role">Storyboarder / Writer</div>
+      <div class="tm-desc">Storyboards chapters, maps out plot structure, and keeps the narrative tight. If a chapter hits hard, Goose probably planned the pacing.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="site-footer">JJK: Beyond Kaisen — Fan Light Novel by @kai_09088<br>Story ongoing</div>
+
+<!-- OVERLAYS -->
+
+<div class="reader-overlay" id="readerOverlay">
+  <div class="reader-header">
+    <button class="reader-back" onclick="closeReader()">← Back</button>
+    <div style="flex:1;min-width:0">
+      <div class="reader-ch-num" id="readerChNum"></div>
+      <div class="reader-ch-title" id="readerChTitle"></div>
+    </div>
+  </div>
+  <div class="reader-body" id="readerBody"></div>
+  <div class="reader-nav" id="readerNav"></div>
+</div>
+
+<div class="profile-overlay" id="profileOverlay">
+  <div class="reader-header">
+    <button class="reader-back" onclick="closeProfile()">← Back</button>
+    <div style="flex:1;min-width:0">
+      <div class="reader-ch-num">Character Profile</div>
+      <div class="reader-ch-title" id="profileOverlayName"></div>
+    </div>
+  </div>
+  <div class="profile-detail" id="profileDetail"></div>
+</div>
+
+<script>
+// ===== PAGE NAVIGATION =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== SPOTIFY / YOUTUBE PLAYER =====
+function toggleSpotifyPlayer() {
+  const c = document.getElementById('spotifyContainer');
+  const btn = document.getElementById('togglePlayerBtn');
+  if (c.style.display === 'none') { c.style.display = 'block'; btn.textContent = 'Hide'; }
+  else { c.style.display = 'none'; btn.textContent = 'Show'; }
+}
+
+function setEmbed(src, height) {
+  const wrap = document.getElementById('embedWrap');
+  wrap.innerHTML = '<iframe id="musicEmbed" style="border-radius:4px;width:100%;height:' + (height || 80) + 'px;border:none;" src="' + src + '" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>';
+}
+
+function parseAndEmbed(url, isPlaylist) {
+  if (!url) return false;
+
+  // Spotify track
+  const spotifyTrack = url.match(/spotify\.com\/track\/([a-zA-Z0-9]+)/);
+  if (spotifyTrack && !isPlaylist) {
+    setEmbed('https://open.spotify.com/embed/track/' + spotifyTrack[1] + '?utm_source=generator&theme=0', 80);
+    return true;
+  }
+
+  // Spotify playlist
+  const spotifyPlaylist = url.match(/spotify\.com\/playlist\/([a-zA-Z0-9]+)/);
+  if (spotifyPlaylist) {
+    setEmbed('https://open.spotify.com/embed/playlist/' + spotifyPlaylist[1] + '?utm_source=generator&theme=0', 152);
+    return true;
+  }
+
+  // Spotify album
+  const spotifyAlbum = url.match(/spotify\.com\/album\/([a-zA-Z0-9]+)/);
+  if (spotifyAlbum) {
+    setEmbed('https://open.spotify.com/embed/album/' + spotifyAlbum[1] + '?utm_source=generator&theme=0', 152);
+    return true;
+  }
+
+  // YouTube playlist
+  const ytPlaylist = url.match(/[?&]list=([a-zA-Z0-9_-]+)/);
+  if (ytPlaylist && isPlaylist) {
+    setEmbed('https://www.youtube.com/embed/videoseries?list=' + ytPlaylist[1], 80);
+    return true;
+  }
+
+  // YouTube single video (multiple URL formats)
+  const ytVideo = url.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/shorts\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/);
+  if (ytVideo) {
+    setEmbed('https://www.youtube.com/embed/' + ytVideo[1], 80);
+    return true;
+  }
+
+  // YouTube music
+  const ytMusic = url.match(/music\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
+  if (ytMusic) {
+    setEmbed('https://www.youtube.com/embed/' + ytMusic[1], 80);
+    return true;
+  }
+
+  return false;
+}
+
+function loadSong() {
+  const url = document.getElementById('songInput').value.trim();
+  if (!url) return;
+  if (!parseAndEmbed(url, false)) {
+    alert('Could not recognize that link. Try a Spotify song link or YouTube video link.');
+  }
+}
+
+function loadPlaylist() {
+  const url = document.getElementById('playlistInput').value.trim();
+  if (!url) return;
+  if (!parseAndEmbed(url, true)) {
+    alert('Could not recognize that link. Try a Spotify playlist/album link or YouTube playlist link.');
+  }
+}
+
+// ===== SHARED REACTIONS (Firebase Firestore) =====
+// -----------------------------------------------
+// DANNY: Replace these with your Firebase config
+// Go to firebase.google.com > Create project > Project Settings > Your apps > Web app
+// Copy the config object and paste the values below
+// -----------------------------------------------
+const FIREBASE_CONFIG = {
+  apiKey: "PASTE_YOUR_API_KEY_HERE",
+  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+  projectId: "PASTE_YOUR_PROJECT_ID_HERE",
+  storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
+  messagingSenderId: "PASTE_YOUR_SENDER_ID",
+  appId: "PASTE_YOUR_APP_ID_HERE"
+};
+
+let db = null;
+let firebaseReady = false;
+
+// Load Firebase SDK dynamically
+function loadFirebase() {
+  return new Promise((resolve) => {
+    if (window.firebase) { resolve(); return; }
+    const s1 = document.createElement('script');
+    s1.src = 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js';
+    s1.onload = () => {
+      const s2 = document.createElement('script');
+      s2.src = 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js';
+      s2.onload = () => resolve();
+      document.head.appendChild(s2);
+    };
+    document.head.appendChild(s1);
+  });
+}
+
+async function initFirebase() {
+  if (FIREBASE_CONFIG.apiKey === "PASTE_YOUR_API_KEY_HERE") {
+    console.log('Firebase not configured yet. Reactions running in local-only mode.');
+    return;
+  }
+  try {
+    await loadFirebase();
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+    firebaseReady = true;
+    console.log('Firebase connected. Reactions are shared.');
+    // Re-render reactions with live data
+    chapters.forEach(ch => renderReactions(ch.ch));
+  } catch(e) {
+    console.log('Firebase failed to load. Reactions running in local-only mode.', e);
+  }
+}
+
+// Local tracking of what THIS user reacted to
+let myReacts = {};
+try { myReacts = JSON.parse(localStorage.getItem('bjk-my-reacts') || '{}'); } catch(e) { myReacts = {}; }
+
+async function getReactionCounts(chNum) {
+  if (firebaseReady && db) {
+    try {
+      const doc = await db.collection('reactions').doc('ch-' + chNum).get();
+      return doc.exists ? doc.data() : {};
+    } catch(e) { return {}; }
+  }
+  // Fallback to localStorage
+  try { return JSON.parse(localStorage.getItem('bjk-reacts-' + chNum) || '{}'); } catch(e) { return {}; }
+}
+
+async function saveReactionCounts(chNum, counts) {
+  if (firebaseReady && db) {
+    try { await db.collection('reactions').doc('ch-' + chNum).set(counts); } catch(e) {}
+  }
+  // Always save locally as backup
+  try { localStorage.setItem('bjk-reacts-' + chNum, JSON.stringify(counts)); } catch(e) {}
+}
+
+async function toggleReact(chNum, emoji) {
+  const key = chNum + '-' + emoji;
+  const counts = await getReactionCounts(chNum);
+  if (myReacts[key]) {
+    delete myReacts[key];
+    counts[emoji] = Math.max(0, (counts[emoji] || 1) - 1);
+  } else {
+    myReacts[key] = true;
+    counts[emoji] = (counts[emoji] || 0) + 1;
+  }
+  try { localStorage.setItem('bjk-my-reacts', JSON.stringify(myReacts)); } catch(e) {}
+  await saveReactionCounts(chNum, counts);
+  renderReactions(chNum, counts);
+}
+
+async function renderReactions(chNum, counts) {
+  const container = document.getElementById('reacts-' + chNum);
+  if (!container) return;
+  if (!counts) counts = await getReactionCounts(chNum);
+  const emojis = ['\uD83D\uDD25','\uD83D\uDE31','\uD83D\uDCAF','\uD83D\uDE2D','\u2764\uFE0F','\uD83E\uDD2F'];
+  container.innerHTML = emojis.map(e => {
+    const key = chNum + '-' + e;
+    const reacted = myReacts[key] || false;
+    const count = counts[e] || 0;
+    return '<button class="react-btn' + (reacted ? ' reacted' : '') + '" onclick="event.stopPropagation(); toggleReact(' + chNum + ',\'' + e + '\')">' + e + '<span class="react-count">' + count + '</span></button>';
+  }).join('');
+}
+
+// Initialize Firebase on load
+initFirebase();
+let readChapters = JSON.parse(localStorage.getItem('bjk-read') || '[]');
+
+function updateProgress() {
+  const total = chapters.length;
+  const read = readChapters.length;
+  const pct = Math.round((read / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = read + '/' + total;
+}
+
+function markRead(chNum) {
+  if (!readChapters.includes(chNum)) {
+    readChapters.push(chNum);
+    try { localStorage.setItem('bjk-read', JSON.stringify(readChapters)); } catch(e) {}
+    updateProgress();
+  }
+}
+
+// ===== CHAPTER DATA =====
+const chapterTexts = {};
+chapterTexts[1] = 'The night air at Sugisawa Municipal High School was thick with the humidity of June along with something heavier Something that made the hair on the back of Megumi Fushiguros neck stand at attention He stood before a weathered thermometer shed a structure that looked more like a birdhouse on stilts than a scientific instrument Youre telling me someones keeping a Special Grade cursed object in a place like this Megumi muttered into his cellphone his voice dripping with disbelief On the other end of the line a breezy nonchalant laugh responded Megumi sighed Recovering it should be no problem then He reached out unlatching the small wooden doors They creaked open to reveal nothing Just the dry splintering wood of an empty box The shed is empty Megumi reported his brow furrowing Theres nothing here Huh the voice on the phone chimed back sounding far too amused for someone who had just lost a world ending relic For real Thats hilarious Im gonna punch you Megumi snapped his eyes scanning the dark shadows of the school grounds No going home until its recovered okay Inside a dimly lit classroom labeled Occult Research the atmosphere was significantly less life and death and significantly more bored teenagers Spirits spirits Yuji Itadori leaned over a table his pinkish hair messy and his expression focused with intense albeit misplaced determination Opposite him sat his seniors Sasaki and Iguchi Between them lay a paper board Please reveal an animal that the student council president is weaker than Yuji intoned Slowly the coin began to slide It drifted across the paper dragging their collective breath with it until it stopped on a single word FISH The room exploded A fish HA HA HA Yuji roared leaning back in his chair Sasaki and Iguchi joined in the absurdity of the spirits answer shattering the spooky ambiance they had tried so hard to cultivate';
+chapterTexts[2] = 'The laugh didnt stop It rose from the storage room below in slow rolling waves unhurried and deliberate the kind of laugh that belonged to something that had been waiting a very long time and didnt mind waiting a little longer The finger in Yujis hand twitched again a small sharp movement like a sleeping animal startled by a sound Were leaving Megumi said He recalled his Divine Dogs the shadows at his feet drinking them back in Now Dont run Walk fast and stay close Walk fast Yuji repeated While something is laughing under the floor Yes Okay Yuji pocketed the finger with the casual acceptance of someone who had long since decided that the universe was fundamentally strange and there was no point arguing with it Where are we going Megumi didnt answer right away because the honest answer was that he didnt know The school was the problem The school had become a problem the moment the seals came off that finger and the cursed energy had time to soak into the walls and the floors and the spaces between things Every shadow in the building was heavier now Every corridor felt like it was listening He started moving toward the east stairwell the one furthest from the storage room his mind running through exit options and discarding them one by one Every route he mapped hit the same wall';
+
+function getWordCount(chNum) {
+  const text = chapterTexts[chNum] || '';
+  return text.split(/\s+/).filter(w => w.length > 0).length;
+}
+
+function getReadTime(words) {
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+const chapters = [
+  { ch:1, title:"The Night at Sugisawa", hype:8, summary:"Megumi Fushiguro arrives at Sugisawa High to recover a Special-Grade cursed object. Yuji Itadori, a kid with impossible physical strength and zero cursed energy, gets pulled into chaos when Kenjaku's minions appear hunting for the finger and for vessels. They speak. They follow orders. They say 'Mother Ken.' And something ancient is laughing beneath the school.", tags:["fight","mystery","lore","cliffhanger"], readable:true, words:3420 },
+  { ch:2, title:"The Corridor", hype:9, summary:"The curses have set a trap. Megumi realizes the enemy is operating remotely, directing curses like chess pieces from somewhere far away. His Divine Dogs can't track what isn't there. He makes the tactical choice to head for the gymnasium. The tactical choice turns out to be exactly what the invisible commander wanted. The corridor is the kill box. The finger is getting warm. And whatever was laughing has gone silent.", tags:["mystery","lore","cliffhanger"], readable:true, words:2890 }
+];
+
+// Chapter full text (HTML)
+const fullChapters = {};
+fullChapters[1] = {title:"The Night at Sugisawa",content:'<p class="section-title">The Night</p><p>The night air at Sugisawa Municipal High School was thick, with the humidity of June along with something heavier. Something that made the hair on the back of Megumi Fushiguro\'s neck stand at attention.</p><p>He stood before a weathered thermometer shed, a structure that looked more like a birdhouse on stilts than a scientific instrument.</p><p><span class="dialogue">"You\'re telling me someone\'s keeping a Special-Grade cursed object in a place like this?"</span> Megumi muttered into his cellphone, his voice dripping with disbelief. On the other end of the line, a breezy, nonchalant laugh responded. Megumi sighed. <span class="dialogue">"Recovering it should be no problem, then."</span></p><p>He reached out, unlatching the small wooden doors. They creaked open to reveal... nothing. Just the dry, splintering wood of an empty box.</p><p><span class="dialogue">"The shed is empty,"</span> Megumi reported, his brow furrowing. <span class="dialogue">"There\'s nothing here."</span></p><p><span class="dialogue">"Huh?"</span> the voice on the phone chimed back, sounding far too amused for someone who had just lost a world-ending relic. <span class="dialogue">"For real? That\'s hilarious!"</span></p><p><span class="dialogue">"I\'m gonna punch you,"</span> Megumi snapped, his eyes scanning the dark shadows of the school grounds. <span class="dialogue">"No going home until it\'s recovered, okay?"</span></p><p class="section-title">The Occult Research Club</p><p>Inside a dimly lit classroom labeled Occult Research, the atmosphere was significantly less "life-and-death" and significantly more "bored teenagers."</p><p><span class="dialogue">"Spirits... spirits..."</span></p><p>Yuji Itadori leaned over a table, his pinkish hair messy and his expression focused with intense, albeit misplaced, determination. Opposite him sat his seniors, Sasaki and Iguchi. Between them lay a paper board.</p><p><span class="dialogue">"Please reveal an animal that the student council president is weaker than!"</span> Yuji intoned.</p><p>Slowly, the coin began to slide. It drifted across the paper, dragging their collective breath with it, until it stopped on a single word: F-I-S-H.</p><p>The room exploded.</p><p><span class="dialogue">"A fish?! HA HA HA!"</span> Yuji roared, leaning back in his chair. Sasaki and Iguchi joined in, the absurdity of the "spirit\'s" answer shattering the spooky ambiance they had tried so hard to cultivate.</p><p>SLAM!</p><p>The door opened and announced its presence. Standing there, framed by the hallway light, was the Student Council President, a man who clearly took himself, and his Aikido training, very seriously.</p><p><span class="dialogue">"Occult Research Club!"</span> he barked. <span class="dialogue">"We don\'t have space in this school for clubs like that! You didn\'t submit your activity reports, and more importantly, you don\'t meet the three-member minimum."</span></p><p>He adjusted his glasses, the light glinting off the lenses in a way that suggested he\'d been practicing that specific "authority" pose in a mirror.</p><p><span class="dialogue">"Wait, so you really are Mr. Worm!"</span> Yuji teased, gesturing to the board. <span class="dialogue">"I\'m gonna kill you..."</span> the President muttered, his composure slipping for a split second.</p><p><span class="dialogue">"Hey now,"</span> Sasaki countered, holding up a weathered newspaper clipping from thirty years ago. <span class="dialogue">"We\'re doing real work! There\'s paranormal activity at the rugby field. Players getting sick, voices in the dark... we think Mr. Yoshida, a construction worker who went missing decades ago, is buried under that turf!"</span></p><p>The President didn\'t blink. <span class="dialogue">"It was ticks. The players had tick-borne illnesses. Case closed."</span> He then turned his gaze to Yuji. <span class="dialogue">"And as for you, Itadori... you aren\'t a member of this club. The Track and Field coach, Mr. Takagi, rewrote your application. You\'re on the team."</span></p><p class="section-title">The Battle of Strength</p><p><span class="dialogue">"ITADORI!"</span></p><p>A man who looked more like a boulder than a human stepped into the hall. Coach Takagi loomed over Yuji, his face a mask of grizzled intensity. <span class="dialogue">"We need you if we\'re going to take over the country!"</span></p><p><span class="dialogue">"Enough already! I said I\'m not joining!"</span> Yuji yelled back.</p><p>Takagi wasn\'t taking no for an answer. <span class="dialogue">"I\'m not a monster. Let\'s make it a fair fight on the field! If I win, you\'re mine. If you win, I\'ll give up on you."</span></p><p>Minutes later, the school\'s athletic field was buzzing. A crowd had gathered to watch the "Tiger of West Junior High" take on the legendary coach. The event? Shot put.</p><p>Across the field, near the rugby goalposts, Megumi Fushiguro watched from a distance. He wasn\'t looking at the athletes. He was looking at the massive, pulsating mass of eyes and teeth clinging to the goalpost.</p><p>A Grade 3 curse, Megumi thought, his hand hovering near his belt. In a place like this? I wonder if it has anything to do with the cursed object...</p><p>His phone vibrated. He looked at the picture of the object he was supposed to find, a grim, finger-like relic wrapped in talismans. The "presence" he felt was overwhelming, shifting between being miles away and right next to him.</p><p>Suddenly, a THUD echoed across the field.</p><p>A heavy metal ball, the shot put, slammed into the ground. It cratered the earth.</p><p><span class="dialogue">"Fourteen meters!"</span> someone screamed.</p><p>Coach Takagi stood back, panting, having put every ounce of his professional strength into the throw. He looked at Yuji, expecting the boy to be intimidated.</p><p>Yuji just picked up the heavy ball like it was a piece of fruit. <span class="dialogue">"I\'m not sure how to throw this thing,"</span> he said, sounding genuinely confused. <span class="dialogue">"Can I just throw it however I want?"</span></p><p><span class="dialogue">"Well, it doesn\'t matter for this throw,"</span> Takagi grunted, crossing his arms.</p><p>Yuji shrugged. He didn\'t use a professional glide or a spin. He just wound up his arm and launched it.</p><p>The ball screamed through the air. It soared past the fourteen-meter mark, past the grass, and slammed into the goalpost at the far end of the field with the force of a cannonball, denting the metal and sending the Grade 3 curse scurrying into the shadows.</p><p>The entire field went silent.</p><p>Yuji turned back, a sheepish grin on his face. <span class="dialogue">"Sorry for using a battle of strength against a sprinter. But hopefully, this shows you how serious I am about the Occult Club!"</span></p><p>Megumi Fushiguro stood frozen, his eyes locked on the pink-haired boy. That kid... is he even human?</p><p class="section-title">The Visitor</p><p>Megumi didn\'t approach Yuji right away. He watched the kid jog back to his friends, laughing about something, completely unaware that the throw he\'d just made would have shattered the ribcage of a grown man. Fourteen meters was professional level. Yuji\'s ball had cleared thirty and bent a steel goalpost. The confusing part was that Megumi couldn\'t sense any cursed energy coming off of him at all. The kid was a total blank. A zero on every scale that mattered, and yet his body moved like it had been built for war.</p><p>"Itadori Yuji," Megumi said under his breath, pulling up the student registry on his phone. "First year. No club affiliation. No martial arts training on record. Lives with his grandfather." None of that explained what he\'d just seen.</p><p>The rugby field curse had vanished after the impact, retreating into the drainage system beneath the school. Megumi could feel it down there, wounded but alive, its presence flickering like a candle in a draft. He\'d deal with it later. The cursed object was gone and someone at this school had it, and based on the residual energy clinging to the air like smoke after a fire, whoever had it didn\'t know what they were holding.</p><p>He waited until the crowd thinned out. Takagi was sitting on a bench with his head in his hands, mumbling something about "genetic freaks" and "wasted potential." Sasaki and Iguchi had wandered off toward the vending machines. Yuji was alone, sitting on the steps outside the gymnasium, unwrapping a protein bar with the focus of a surgeon.</p><p><span class="dialogue">"Itadori."</span></p><p>Yuji looked up. <span class="dialogue">"Yeah?"</span></p><p><span class="dialogue">"I\'m Fushiguro. I\'m looking for something."</span> Megumi kept his voice flat and professional, the way Gojo had taught him, even though Gojo himself never sounded professional about anything. <span class="dialogue">"A cursed object was being stored in the thermometer shed on campus. It\'s gone. Do you know anything about it?"</span></p><p>Yuji blinked. <span class="dialogue">"Cursed object?"</span></p><p><span class="dialogue">"It looks like a finger. Old. Dried out. Wrapped in paper seals."</span></p><p>Something shifted behind Yuji\'s eyes. Recognition. <span class="dialogue">"Oh,"</span> he said. <span class="dialogue">"Sasaki found something like that earlier. She thought it was creepy so she gave it to Iguchi. I think he put it in the clubroom."</span></p><p>Megumi\'s stomach dropped. <span class="dialogue">"They OPENED the seals?"</span></p><p><span class="dialogue">"I mean, Iguchi peeled one off to look at it. Is that bad?"</span></p><p>Megumi was already running.</p><p class="section-title">The Clubroom</p><p>The hallway leading to the Occult Research clubroom was wrong. Megumi felt it the second he turned the corner. The fluorescent lights overhead buzzed at a frequency that made his teeth ache and the floor tiles had a faint dark grain running through them like veins under skin. The temperature had dropped ten degrees and something was feeding.</p><p>The cursed object\'s seals were a containment system. Each strip of paper suppressed a fraction of the relic\'s power, keeping it dormant, keeping it quiet. Peeling even one off was like cracking a window in a submarine. The pressure difference did the rest. Cursed energy was leaking out of the clubroom door in visible waves, dark and oily and shimmering the way heat rises off asphalt in summer, and in those waves shapes were forming. Small ones. Embryonic curses growing in real time on the leaking energy.</p><p><span class="dialogue">"Stay back,"</span> Megumi said without turning around.</p><p><span class="dialogue">"Dude, I followed you because you looked freaked out,"</span> Yuji said from right behind him. Of course he\'d followed. <span class="dialogue">"What is that stuff coming out of the door?"</span></p><p><span class="dialogue">"You can SEE that?"</span></p><p><span class="dialogue">"It\'s kind of hard to miss."</span></p><p>Megumi filed that away. Normal humans couldn\'t see cursed energy at all, let alone traces of concentrated leakage. This kid could see it like it was nothing. He didn\'t have time to think about it. He pressed his hands together and the shadows at his feet stirred and darkened and from them rose two shikigami, Divine Dogs, one white and one black. They flanked him with their heads low and their hackles up, growling at the door.</p><p>Yuji took a step back. <span class="dialogue">"WHAT."</span></p><p><span class="dialogue">"Stay behind me. Don\'t touch anything. Don\'t talk to anything."</span></p><p>Megumi kicked the door open.</p><p>The clubroom was unrecognizable. The desks had been shoved against the walls and the ceiling tiles were cracked and sagging, dripping something that looked like it used to be water. In the center of the room, sitting on the table where they\'d been playing with the spirit board twenty minutes ago, was the finger. Unwrapped. Every seal removed. The finger itself was black and twisted, the nail long and curved like a hook, and it pulsed with a dark glow that burned brighter than anything else in the room.</p><p>Standing around it, swaying slightly, were three figures. They were shaped like people but the proportions were all wrong. Too tall and too thin and their skin had a gray powdery texture like old concrete. Their eyes were solid black from corner to corner. One of them turned its head toward Megumi with a sound like cracking knuckles.</p><p><span class="dialogue">"Vessels,"</span> it said. Its voice came from somewhere behind its teeth, muffled, like it was speaking through a mouthful of dirt. <span class="dialogue">"We were told to wait for the vessels."</span></p><p>Megumi\'s blood went cold. Told. Curses didn\'t get told to do things. They acted on instinct and hunger and fear. They didn\'t follow orders unless someone gave them orders.</p><p><span class="dialogue">"Who sent you?"</span> Megumi demanded.</p><p>The three figures tilted their heads in unison. Same angle, same speed, synchronized like puppets on the same set of strings. <span class="dialogue">"The mother,"</span> they said together. <span class="dialogue">"Mother Ken."</span></p><p>The Divine Dogs lunged.</p><p class="section-title">Vessels</p><p>The fight was short and ugly. The three figures were stronger than they looked. Grade 4 at minimum and maybe pushing Grade 3 based on their cursed energy output. They moved in perfect coordination, covering each other\'s blind spots, rotating positions so that no single target was exposed for more than a second. The way they moved was tactical, trained, and that was the part that scared Megumi most because curse behavior shouldn\'t look like that.</p><p>His white Divine Dog caught the first one by the throat and slammed it into the wall hard enough to crack the plaster. The figure grabbed the dog\'s jaw and started prying it open with inhuman strength. The black Divine Dog circled the second figure, snapping at its legs, while the third figure ignored the dogs entirely and walked straight toward the finger.</p><p><span class="dialogue">"Don\'t let it touch the object!"</span> Megumi shouted. He extended his shadow across the floor like spilled ink, rising into tendrils that wrapped around the third figure\'s ankles. It stumbled. Looked down at its feet. Then it looked at Megumi with those flat black eyes and said very clearly, <span class="dialogue">"The Ten Shadows. He said you\'d come."</span></p><p>He. Not "the mother" this time. Someone else. Megumi\'s mind raced. How many people were giving these things instructions?</p><p>The figure tore free of the shadows. Its legs shredded at the ankle but no blood came out, just dry gray dust pouring from the wounds like sand from a broken hourglass. It dragged itself toward the finger on its hands.</p><p>A protein bar wrapper hit it in the face.</p><p><span class="dialogue">"HEY."</span></p><p>Yuji stood in the doorway holding a full solid wood teacher\'s desk over his head with one hand like it weighed nothing. <span class="dialogue">"I don\'t know what\'s happening,"</span> Yuji said, <span class="dialogue">"but those things are going for the creepy finger and that seems bad."</span></p><p>He threw the desk. It hit the crawling figure dead center and drove it through the floor. The wood splintered and the figure went down into the storage room below in a shower of tile and dust and didn\'t come back up.</p><p>Megumi stared.</p><p>The remaining two figures paused and looked at Yuji, then at each other, then back at Yuji. One of them opened its mouth wider than a human mouth should open and said, <span class="dialogue">"That one. The mother wants that one."</span></p><p>They both lunged at Yuji.</p><p>Megumi moved and the black Divine Dog intercepted the first one midair. But the second one was faster and it closed the distance to Yuji in a heartbeat, gray hands reaching for his face. Yuji ducked. Clean and practiced and explosive, putting himself below the figure\'s reach, and then he was coming back up with his fist and the punch connected with the figure\'s chest and the sound it made was like a car hitting a concrete barrier. The figure flew backward and hit the far wall so hard the entire wall bowed outward. Cracks ran across the plaster and up into the ceiling. The figure slumped and twitched once and went still. Gray dust leaked from every joint.</p><p>Yuji stood in the middle of the ruined clubroom breathing hard with his fist still extended. The protein bar he\'d been eating was still in his other hand. <span class="dialogue">"What,"</span> he said slowly, <span class="dialogue">"the hell is going on?"</span></p><p>Megumi didn\'t answer immediately. He was looking at the finger. It was pulsing faster now. Reacting to Yuji specifically. Like it could feel him there and wanted to get closer.</p><p><span class="dialogue">"We need to leave,"</span> Megumi said. <span class="dialogue">"Right now. Grab the finger. Don\'t eat it. Don\'t smell it. Don\'t do anything with it except carry it."</span></p><p><span class="dialogue">"Why would I EAT a finger?"</span></p><p><span class="dialogue">"Just take it and let\'s go."</span></p><p>Yuji grabbed the finger and the second his skin made contact the pulsing stopped. The dark glow dimmed. The finger went dormant in his hand like it had found what it was looking for and decided to rest.</p><p>From the hole in the floor, from the storage room below, a sound drifted up. Something that had been down there already, waiting beneath the school in the dark, listening to the fight above. A laugh. Low and grinding and ancient. The finger in Yuji\'s hand twitched.</p><p><span class="dialogue">"Fushiguro,"</span> Yuji said quietly. <span class="dialogue">"The finger just moved."</span></p><p>The laugh got louder.</p><div class="chapter-end"><div class="end-label">Chapter 1 End</div><div class="next-ch">Next: Chapter 2 — The Corridor</div></div>'};
+
+fullChapters[2] = {title:"The Corridor",content:'<p>The laugh didn\'t stop.</p><p>It rose from the storage room below in slow rolling waves, unhurried and deliberate, the kind of laugh that belonged to something that had been waiting a very long time and didn\'t mind waiting a little longer. The finger in Yuji\'s hand twitched again, a small sharp movement like a sleeping animal startled by a sound.</p><p><span class="dialogue">"We\'re leaving,"</span> Megumi said. He recalled his Divine Dogs, the shadows at his feet drinking them back in. <span class="dialogue">"Now. Don\'t run. Walk fast and stay close."</span></p><p><span class="dialogue">"Walk fast,"</span> Yuji repeated. <span class="dialogue">"While something is laughing under the floor."</span></p><p><span class="dialogue">"Yes."</span></p><p><span class="dialogue">"Okay."</span> Yuji pocketed the finger with the casual acceptance of someone who had long since decided that the universe was fundamentally strange and there was no point arguing with it. <span class="dialogue">"Where are we going?"</span></p><p>Megumi didn\'t answer right away because the honest answer was that he didn\'t know. The school was the problem. The school had become a problem the moment the seals came off that finger and the cursed energy had time to soak into the walls and the floors and the spaces between things. Every shadow in the building was heavier now. Every corridor felt like it was listening.</p><p>He started moving toward the east stairwell, the one furthest from the storage room, his mind running through exit options and discarding them one by one. Every route he mapped hit the same wall. The building\'s energy had shifted too far. Whatever was down there in the dark had already started influencing the space around it, and anything Megumi chose to do next, any direction he moved, was being anticipated by something that had been patient enough to wait through the entire fight upstairs without announcing itself.</p><p>That bothered him more than the curses had.</p><p class="section-title">The Corridor</p><p>They made it to the second-floor landing before Megumi stopped walking.</p><p>The stairwell below them was wrong. He couldn\'t see anything in the shadows pooled at the bottom of the steps, couldn\'t hear anything above the distant hum of the building\'s ventilation, couldn\'t smell anything except the usual chalk-and-cleaning-fluid smell of a school at night. But he felt it. A pressure differential. A held breath.</p><p>Something was already downstairs.</p><p>He looked back the way they\'d come. The hallway behind them was empty. The fluorescent light at the far end was flickering, stuttering in and out in a rhythm that was almost but not quite regular, and in the spaces between the flickers, the hallway\'s shadows shifted.</p><p><span class="dialogue">"They\'re behind us too,"</span> Yuji said quietly.</p><p>Megumi turned. <span class="dialogue">"You can feel that?"</span></p><p><span class="dialogue">"I can see them. Sort of."</span> Yuji squinted at the far end of the hall, his eyes tracking something Megumi couldn\'t fully make out yet. <span class="dialogue">"They\'re pressed against the ceiling. Three of them. Maybe four. They\'re very still."</span></p><p>Megumi looked up. In the gap between the topmost row of lockers and the ceiling, in the seam of shadow where the fluorescent lights didn\'t quite reach, shapes were folded. Waiting. They had been there the whole time, since before Megumi and Yuji had entered the hallway. They had watched them walk past and said nothing and done nothing and just waited.</p><p>This wasn\'t ambush behavior. This was a net.</p><p>Someone had mapped the school. Someone had known exactly which exits Megumi would instinctively move toward and seeded them with lookouts ahead of time. The precision required for that meant the orders had been given after Megumi arrived, which meant whoever was giving them had eyes on the school in real time.</p><p>Megumi\'s hand hovered near his belt. He ran the numbers quietly, the way he\'d been trained to. How many curse signatures could he feel in the building. What grade. What distribution. The answer came back wrong.</p><p>Eight. At minimum. Possibly more in the floors above, where his range didn\'t reach cleanly. And the one below in the storage room, the one still laughing, who hadn\'t moved at all.</p><p><span class="dialogue">"There\'s a sorcerer,"</span> Megumi said, more to himself than to Yuji.</p><p><span class="dialogue">"What?"</span></p><p><span class="dialogue">"Someone is controlling these curses. Curses don\'t plan. They don\'t set ambushes. They don\'t hold positions and wait for a target to move into range. That requires intelligence, sustained focus, and a way to communicate with each curse individually."</span> He turned slowly, scanning the ceiling, the shadows, the seam under the lockers. <span class="dialogue">"There\'s a sorcerer somewhere giving real-time orders."</span></p><p><span class="dialogue">"Where?"</span></p><p><span class="dialogue">"That\'s the problem."</span> Megumi summoned his shadows and felt them spread across the floor, thin and dark, questing outward like roots. The Divine Dogs rose beside him, heads low, hackles raised, and Megumi pushed them. <span class="dialogue">"Find the source. Track."</span></p><p>The white dog moved forward three steps and stopped. It lifted its nose and scented the air, working through the layers of the building\'s smell, chalk and old wood and something dark and organic, the cursed energy staining everything. The dog turned in a slow circle. Then it sat down. It looked up at Megumi with its pale eyes and it just sat there.</p><p>Nothing.</p><p><span class="dialogue">"They can\'t track it,"</span> Megumi said quietly. The realization landed like cold water. <span class="dialogue">"My dogs track cursed energy. Their primary sense. But there\'s no cursed energy source to track because there\'s no sorcerer in the building."</span> He paused. <span class="dialogue">"There\'s never been a sorcerer in this building."</span></p><p>Yuji looked at him. <span class="dialogue">"So where are they?"</span></p><p>Megumi didn\'t answer. He was looking at the cursed figures on the ceiling, the ones downstairs, the distribution of them, the way they\'d been placed. It was too clean. Too geometric. Someone had stood somewhere outside this building, at a distance, and arranged pieces on a board with the patience and spatial awareness of a chess player who\'d memorized the layout of the room from somewhere else entirely.</p><p>Far away. The thought formed slowly, the way a bruise develops. They\'re far away. Watching from somewhere they can see enough of the building to direct traffic, giving instructions to each curse the way a commander gives orders through radio, without ever setting foot on the field.</p><p>It was elegant and it was infuriating and most importantly it meant that Megumi had no way to find them. No cursed energy trail. No physical presence. No scent for his dogs to follow. Just the curses themselves, which were effects, not causes.</p><p class="section-title">The Invisible Commander</p><p>Megumi stood very still on that second floor landing and let the information settle. He\'d been trained for situations where the enemy was stronger than him. He\'d been trained for situations where the enemy outnumbered him. He had never been trained for a situation where the enemy simply wasn\'t there.</p><p>Everything in jujutsu combat assumed proximity. You tracked your opponent\'s cursed energy. You read their body language. You predicted their technique based on output patterns and stance and the subtle way a sorcerer\'s energy shifted before they committed to an action. All of that required the enemy to be present, to be somewhere within the range of your senses, to exist in the same physical space as the fight.</p><p>Whoever was doing this had removed themselves from the equation entirely. They sat somewhere comfortable, somewhere safe, and they moved their pieces from a distance with the calm of someone playing a game they\'d already won. The curses were disposable. The school was the board. And Megumi and Yuji were walking through it exactly the way someone wanted them to.</p><p class="section-title">The Gymnasium</p><p><span class="dialogue">"We don\'t chase,"</span> Megumi said. <span class="dialogue">"We can\'t win a pursuit where the enemy isn\'t present. We defend. We hold a position they can\'t easily flood and we make the cost of sending more curses high enough that they stop."</span> He looked at the stairwell, at the hallway, at the geometry of the building around them. His mind was running the angles. <span class="dialogue">"The clubroom is behind us and compromised. The stairwell is blocked. There\'s a maintenance corridor on this floor that connects to the gymnasium. Curses don\'t do well in open space. Large area, high ceiling, multiple sight lines. It advantages my technique."</span></p><p><span class="dialogue">"Okay,"</span> Yuji said.</p><p><span class="dialogue">"It\'s not a plan. It\'s a delay."</span></p><p><span class="dialogue">"Okay,"</span> Yuji said again, the same tone, completely unbothered.</p><p><span class="dialogue">"You understand that someone is out there right now, watching this building, and we have no way to locate them."</span></p><p><span class="dialogue">"Yeah."</span></p><p><span class="dialogue">"And you\'re not concerned."</span></p><p>Yuji looked at him with a kind of calm directness that Megumi found unexpectedly unnerving coming from someone holding a cursed severed finger in his pocket. <span class="dialogue">"I\'m concerned,"</span> Yuji said. <span class="dialogue">"But being concerned doesn\'t change what we need to do. You said defend. So let\'s go defend."</span> He paused. <span class="dialogue">"Which way is the maintenance corridor?"</span></p><p>Megumi pointed.</p><p>They moved.</p><div class="chapter-end"><div class="end-label">Chapter 2 End</div><div class="next-ch">Next: Chapter 3 — Coming Friday</div></div>'};
+
+// ===== CHARACTER PROFILES =====
+const characters = [
+  { rank:"#1", name:"Mr. Kaisen", epithet:"The Progenitor of Cursed Energy", status:"unknown", ability:"Can give and take cursed energy from any living being. Created cursed energy as a gift to humanity. Domain: Genesis.", first:"TBA", threat:"Beyond Classification" },
+  { rank:"#2", name:"Kenjaku", epithet:"Bleeding Eye of the World", status:"active", ability:"Final Form is a planet-sized eyeball. Possesses every technique from every body inhabited over 1000 years. Controls cursed beasts remotely. 'Mother Ken.'", first:"Ch.1 (referenced)", threat:"Catastrophic" },
+  { rank:"#3", name:"Gojo Satoru", epithet:"Earth's Guardian (True Manifestation)", status:"active", ability:"Evolved Six Eyes, Infinity, and Unlimited Void. Ascended to a golden angelic form. The strongest sorcerer on the surface.", first:"Ch.1 (voice only)", threat:"Special Grade+" },
+  { rank:"#4", name:"Ryomen Sukuna", epithet:"Monarch of Hatred (EOS)", status:"unknown", ability:"Cleave, Dismantle, Malevolent Shrine. Pure demonic cursed energy form. The King of Curses at his absolute peak.", first:"Ch.1 (laughing)", threat:"Catastrophic" },
+  { rank:"#5", name:"King Mahoraga", epithet:"Adaption Emperor", status:"active", ability:"Self-summoning. The wheel adapts to any attack. Built the Sect of Sila empire. Cursed technique: Son of Sam.", first:"TBA", threat:"Special Grade+" },
+  { rank:"#6", name:"The Absolutes Apostle", epithet:"The Absolute Given Flesh", status:"unknown", ability:"Physical manifestation of the original source of all cursed energy. 50% power with future sight, 100% without.", first:"TBA", threat:"Beyond Classification" },
+  { rank:"#7", name:"Gojo's Doppelganger", epithet:"The Evil Mirror", status:"active", ability:"Reversed Infinity, Black Void domain, corrupted Six Eyes. Absorbed Kenjaku's Beast Greed for 15+ additional techniques.", first:"TBA", threat:"Special Grade+" },
+  { rank:"#8", name:"Cosmic Yuki", epithet:"Ruler of the Cosmos", status:"active", ability:"Evolved Star Rage into cosmic-scale manipulation. Fills voids with starlight. Universal awareness.", first:"TBA", threat:"Special Grade" },
+  { rank:"#9", name:"Megumi Fushiguro", epithet:"Shadow Monarch", status:"active", ability:"Mastered Ten Shadows. Shadow army can summon echoes of the dead. Currently uses base Divine Dogs.", first:"Ch.1", threat:"Special Grade (potential)" },
+  { rank:"#10", name:"Perfected Being Yuta", epithet:"The Concept Copier", status:"active", ability:"Copies concepts, not just techniques. Rika bonded. Copied the concept of Gojo himself.", first:"TBA", threat:"Special Grade+" },
+  { rank:"#13", name:"Kashimo", epithet:"The God of Lightning (Prime)", status:"active", ability:"Lightning-based cursed energy at maximum output. Zeus form. Waiting for his real fight.", first:"TBA", threat:"Special Grade" },
+  { rank:"#14", name:"Jogo", epithet:"King of Fire", status:"active", ability:"Reborn from Earth's core. Walking volcano. Magma blood. Obsidian bones. 10km heat aura.", first:"TBA", threat:"Special Grade" },
+  { rank:"#16", name:"Toji Fushiguro", epithet:"God Slayer", status:"echo", ability:"Zero cursed energy. Body rejects curses. Inverted Spear of Heaven. Physical stats beyond human.", first:"TBA", threat:"Special Grade (physical)" },
+  { rank:"#17", name:"Rika", epithet:"True Queen of Curses", status:"active", ability:"Eldritch form. Unlimited cursed energy storage. Copies and stores any technique Yuta feeds her.", first:"TBA", threat:"Special Grade" },
+  { rank:"#20", name:"Yuji Itadori", epithet:"Captain Japan / The Golden Body", status:"active", ability:"Superhuman physicality. Zero cursed energy but can see it. The Golden Body activates in extreme combat. Energy older than curses.", first:"Ch.1", threat:"Grade 1 (evolving)" },
+  { rank:"#21", name:"Yorozu", epithet:"The Fallen Forge (FF)", status:"active", ability:"Walking cursed tool forge. Generates counter-weapons in real time. Can convert living sorcerers into cursed tools.", first:"TBA", threat:"Special Grade" },
+  { rank:"#22", name:"Uraume", epithet:"True Body (Frost Phoenix)", status:"active", ability:"Ice phoenix/dragon form. Frost aura freezes space. Fought Jogo for 3 days to a draw.", first:"TBA", threat:"Special Grade" },
+  { rank:"#24", name:"Choso", epithet:"Blood Sovereign", status:"active", ability:"Blood manipulation at massive scale. Supernova compresses all blood into detonation. Can weaponize rain.", first:"TBA", threat:"Grade 1+" },
+  { rank:"#25", name:"Dagon", epithet:"King of the Sea", status:"active", ability:"Cthulhu-sized. Domain expansion (stolen by Greed). Controls all ocean water.", first:"TBA", threat:"Special Grade" },
+  { rank:"#30", name:"Kusakabe", epithet:"Greatest Swordsman", status:"active", ability:"Simple Domain master. Pure sword technique. Can cut domain barriers.", first:"TBA", threat:"Grade 1+" },
+  { rank:"#31", name:"Uro", epithet:"Sky Queen", status:"active", ability:"Spatial manipulation of the sky. Compresses atmosphere into crushing gravity. Fights with space itself.", first:"TBA", threat:"Grade 1+" },
+  { rank:"#34", name:"Panda", epithet:"King of Beasts", status:"critical", ability:"Three merged cores. Unbound Leviathan form. Yaga's core stolen by Greed. Currently critical.", first:"TBA", threat:"Grade 1 (diminished)" },
+  { rank:"N/A", name:"Kenjaku's Beast Greed", epithet:"The Fifth Beast", status:"absorbed", ability:"Steals what you value most. Techniques, cores, domains. Absorbed into the Doppelganger.", first:"TBA", threat:"Disaster Class" }
+];
+
+// ===== BUILD CHAPTER LIST =====
+const list = document.getElementById('chapterList');
+chapters.forEach(ch => {
+  const readTime = getReadTime(ch.words);
+  const hypeHTML = Array.from({length:10}, (_,j) => '<div class="hype-bar' + (j < ch.hype ? (ch.hype >= 10 ? ' gold' : ' filled') : '') + '"></div>').join('');
+  const tagsHTML = ch.tags.map(t => '<span class="ch-tag ' + t + '">' + t + '</span>').join('');
+  const entry = document.createElement('div');
+  entry.className = 'chapter-entry';
+  entry.innerHTML = '<div class="ch-top"><div class="ch-number">Ch.' + ch.ch + '</div><div class="ch-info"><div class="ch-title">' + ch.title + '<span class="new-badge">New</span></div><div class="ch-meta"><span class="ch-arc">Chapter ' + ch.ch + '</span><span class="ch-wordcount">' + ch.words.toLocaleString() + ' words · ' + readTime + ' min read</span></div><div class="ch-hype">' + hypeHTML + '</div></div></div><div class="ch-detail"><div class="ch-summary">' + ch.summary + '</div><div class="ch-tags">' + tagsHTML + '</div><div class="reactions" id="reacts-' + ch.ch + '"></div>' + (ch.readable ? '<div class="read-btn" onclick="event.stopPropagation(); openReader(' + ch.ch + ')">Read Full Chapter \u2192</div>' : '') + '</div>';
+  entry.addEventListener('click', () => entry.classList.toggle('expanded'));
+  list.appendChild(entry);
+  renderReactions(ch.ch);
+});
+
+// ===== BUILD PROFILES GRID =====
+const grid = document.getElementById('profilesGrid');
+characters.forEach((c, i) => {
+  const card = document.createElement('div');
+  card.className = 'profile-card';
+  card.innerHTML = '<div class="profile-rank">' + c.rank + '</div><div class="profile-name">' + c.name + '</div><div class="profile-epithet">' + c.epithet + '</div><div class="profile-status ' + c.status + '">' + c.status + '</div>';
+  card.onclick = () => openProfile(i);
+  grid.appendChild(card);
+});
+
+// ===== READER =====
+function openReader(chNum) {
+  const data = fullChapters[chNum];
+  if (!data) return;
+  document.getElementById('readerChNum').textContent = 'Chapter ' + chNum;
+  document.getElementById('readerChTitle').textContent = data.title;
+  document.getElementById('readerBody').innerHTML = data.content;
+  const nums = [1,2];
+  const idx = nums.indexOf(chNum);
+  const nav = document.getElementById('readerNav');
+  nav.innerHTML = '';
+  const pb = document.createElement('button'); pb.textContent = '\u2190 Prev'; pb.disabled = idx<=0; if(idx>0) pb.onclick=()=>openReader(nums[idx-1]);
+  const nb = document.createElement('button'); nb.textContent = 'Next \u2192'; nb.disabled = idx>=nums.length-1; if(idx<nums.length-1) nb.onclick=()=>openReader(nums[idx+1]);
+  nav.appendChild(pb); nav.appendChild(nb);
+  document.getElementById('readerOverlay').classList.add('open');
+  document.getElementById('readerOverlay').scrollTop = 0;
+  document.body.classList.add('reader-open');
+  document.body.dataset.scrollY = window.scrollY;
+  markRead(chNum);
+}
+
+function closeReader() {
+  document.getElementById('readerOverlay').classList.remove('open');
+  document.body.classList.remove('reader-open');
+  window.scrollTo(0, parseInt(document.body.dataset.scrollY || 0));
+}
+
+// ===== PROFILE OVERLAY =====
+function openProfile(idx) {
+  const c = characters[idx];
+  document.getElementById('profileOverlayName').textContent = c.name;
+  document.getElementById('profileDetail').innerHTML = '<div class="pd-rank">' + c.rank + '</div><div class="pd-name">' + c.name + '</div><div class="pd-epithet">' + c.epithet + '</div><div class="pd-section"><div class="pd-section-title">Ability</div><div class="pd-text">' + c.ability + '</div></div><div class="pd-section"><div class="pd-section-title">Stats</div><div class="pd-stats"><div class="pd-stat">First: ' + c.first + '</div><div class="pd-stat">Threat: ' + c.threat + '</div><div class="pd-stat">Status: ' + c.status + '</div></div></div>';
+  document.getElementById('profileOverlay').classList.add('open');
+  document.getElementById('profileOverlay').scrollTop = 0;
+  document.body.classList.add('reader-open');
+  document.body.dataset.scrollY = window.scrollY;
+}
+
+function closeProfile() {
+  document.getElementById('profileOverlay').classList.remove('open');
+  document.body.classList.remove('reader-open');
+  window.scrollTo(0, parseInt(document.body.dataset.scrollY || 0));
+}
+
+updateProgress();
+</script>
+
+</body>
+</html>
